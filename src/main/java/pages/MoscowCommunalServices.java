@@ -26,7 +26,7 @@ public class MoscowCommunalServices extends BasePage {
     public void selectPayCommunalInMoscow() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
-        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/oplata/?tab=pay");
+        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/");
     }
 
     //Проверка обязательности заполнения поля "Код плательщика за ЖКУ в Москве"
@@ -34,11 +34,13 @@ public class MoscowCommunalServices extends BasePage {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(period, "01.2018");
+/*
 
         WebElement wb = driver.findElement(sumOfPayment);
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("arguments[0].value='5151';", wb);
 
+*/
 
         waitForElementAndClick(sumOfPayment);
         fillInputField(sumOfPayment, "10");
