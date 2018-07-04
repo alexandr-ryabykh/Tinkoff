@@ -69,15 +69,16 @@ public class MoscowCommunalServices extends BasePage {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(payerCode, "1550");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
-        refreshUrl();
         fillInputField(payerCode, "-5");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
-        refreshUrl();
         fillInputField(payerCode, RandomStringUtils.randomAlphabetic(10));
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле обязательное");
-        refreshUrl();
         fillInputField(payerCode, "%*&^@212121");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
     }
 
@@ -86,19 +87,19 @@ public class MoscowCommunalServices extends BasePage {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(period, "00.0000");
-        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
-        refreshUrl();
+        loseFocusWithWait();
+        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
         fillInputField(period, "13.1998");
-        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
-        refreshUrl();
+        loseFocusWithWait();
+        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
         fillInputField(period, RandomStringUtils.randomAlphabetic(10));
-        Assert.assertEquals(getText(errorMessageForPeriod), "Поле обязательное");
-        refreshUrl();
+        loseFocusWithWait();
+        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле обязательное");
         fillInputField(period, "11.0000");
-        Assert.assertTrue(!elementIsDisplayed(errorMessageForPeriod));
-        refreshUrl();
+        loseFocusWithWait();
         fillInputField(period, "12.199");
-        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
+        loseFocusWithWait();
+        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
 
     }
 
@@ -107,29 +108,31 @@ public class MoscowCommunalServices extends BasePage {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(sumOfPayment, "0");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, "-5");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Поле заполнено неверно");
-        refreshUrl();
         fillInputField(sumOfPayment, "9");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, "9.99");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, "14999");
-        Assert.assertTrue(!elementIsDisplayed(errorMessageForSumOfPayment));
+        loseFocusWithWait();
+      //  Assert.assertTrue(!elementIsDisplayed(errorMessageForSumOfPayment));
         fillInputField(sumOfPayment, "15000.01");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, "15001");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, "100000");
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        refreshUrl();
         fillInputField(sumOfPayment, RandomStringUtils.randomAlphabetic(20));
+        loseFocusWithWait();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Поле обязательное");
     }
 

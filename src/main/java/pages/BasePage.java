@@ -1,7 +1,9 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import utils.WaitingUtility;
 
 import java.util.List;
@@ -12,16 +14,12 @@ public class BasePage extends WaitingUtility {
         driver.get(url);
     }
 
-    protected String getCurrentUrl(){
-       return driver.getCurrentUrl();
+    protected String getCurrentUrl() {
+        return driver.getCurrentUrl();
     }
 
     protected void navigateTo(String url) {
         driver.navigate().to(url);
-    }
-
-    protected void refreshUrl() {
-        driver.navigate().refresh();
     }
 
     public String getText(By locator) {
@@ -33,11 +31,13 @@ public class BasePage extends WaitingUtility {
         waitUntilClickable(locator).sendKeys(message);
     }
 
-    public void setAttribute(By locator, String message) {
-        waitUntilClickable(locator);
-    }
     List<WebElement> selectFromList(By locator) {
         return driver.findElements(locator);
+    }
+
+    public void loseFocusWithWait() {
+        Actions actions = new Actions(driver);
+        actions.moveByOffset(-10000, 0).click().perform();
     }
 
 
