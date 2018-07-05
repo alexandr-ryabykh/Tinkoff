@@ -1,142 +1,144 @@
 package pages;
 
-import com.sun.xml.internal.ws.policy.AssertionSet;
+import io.qameta.allure.Step;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 import static utils.LoadProperties.COMMUNAL_PAYMENTS_MOSCOW;
 
 public class MoscowCommunalServices extends BasePage {
 
-
     By payCommunalInMoscow = By.xpath("//span[text()='Оплатить ЖКУ в Москве']");
-    private By payerCode = By.name("provider-payerCode");
+    private By payerCode = By.xpath("//input[@name='provider-payerCode']");
     private By period = By.name("provider-period");
-    By voluntureHomeInsurance = By.xpath("(//*[@class='Input__valueContent_1Os4v Input__valueContent_primary_3sxF0'])[1]");
-    private By sumOfPayment = By.xpath("(//*[@class='Input__wrapper_1A9vy'])[2]//child::div/input");
+    private By sumOfPayment = By.xpath("//*[@class='ui-form__row ui-form__row_combination']//label");
+    private By sumOfPaymentInput = By.xpath("//*[@class='ui-form__row ui-form__row_combination']//input");
 
-    private By errorMessageForPayerCode = By.xpath("(//*[@class='ui-form-field-error-message ui-form-field-error-message_ui-form'])[1]");
-    private By errorMessageForPeriod = By.xpath("(//*[@class='ui-form-field-error-message ui-form-field-error-message_ui-form'])[2]");
-    private By errorMessageForSumOfPayment = By.xpath("(//*[@class='ui-form-field-error-message ui-form-field-error-message_ui-form'])[3]");
+    private By errorMessageForPayerCode = By.xpath("//*[@data-qa-file='FormFieldWrapper' and descendant::input[@name='provider-payerCode']]//*[@data-qa-file='UIFormRowError']");
+    private By errorMessageForPeriod = By.xpath("//*[@data-qa-file='FormFieldWrapper' and descendant::input[@name='provider-period']]//*[@data-qa-file='UIFormRowError']");
+    private By errorMessageForSumOfPayment = By.xpath("//*[@data-qa-file='FormFieldWrapper' and descendant::*[contains(text(),'Сумма платежа,')]]//*[@data-qa-file='UIFormRowError']");
 
 
+    @Step("Select payment of communal services in Moscow")
     public void selectPayCommunalInMoscow() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
-        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/");
+        waitUntilElementIsVisible(payerCode);
+        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/oplata/?tab=pay");
     }
 
-    //Проверка обязательности заполнения поля "Код плательщика за ЖКУ в Москве"
+    @Step("Verify obligatorily payer code input")
     public void verifyObligatorilyPayerCodeInput() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(period, "01.2018");
-/*
-
-        WebElement wb = driver.findElement(sumOfPayment);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].value='5151';", wb);
-
-*/
-
         waitForElementAndClick(sumOfPayment);
-        fillInputField(sumOfPayment, "10");
+        fillInputField(sumOfPaymentInput, "10");
+        sendEnter(sumOfPaymentInput);
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле обязательное");
     }
 
-    //Проверка обязательности заполнения поля период оплаты
+    @Step("Verify obligatorily period input")
     public void verifyObligatorilyPeriodInput() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
-        fillInputField(payerCode, RandomStringUtils.random(10));
-        fillInputField(sumOfPayment, "1505");
+        fillInputField(payerCode, "1234567896");
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "1505");
+        sendEnter(sumOfPaymentInput);
         Assert.assertEquals(getText(errorMessageForPeriod), "Поле обязательное");
     }
 
-    //Проверка обязательности заполнения поля сумма платежа
+    @Step("Verify obligatorily sum input")
     public void verifyObligatorilySumInput() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
-        fillInputField(payerCode, RandomStringUtils.random(10));
+        fillInputField(payerCode, "1234567895");
+        sendEnter(payerCode);
         fillInputField(period, "03.2018");
+        sendEnter(period);
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Поле обязательное");
     }
 
-
-    //Проверка на невалидные значения код плательщика
+    @Step("Verify invalid payer code")
     public void verifyInvalidPayerCode() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(payerCode, "1550");
-        loseFocusWithWait();
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
         fillInputField(payerCode, "-5");
-        loseFocusWithWait();
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
         fillInputField(payerCode, RandomStringUtils.randomAlphabetic(10));
-        loseFocusWithWait();
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле обязательное");
         fillInputField(payerCode, "%*&^@212121");
-        loseFocusWithWait();
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForPayerCode), "Поле неправильно заполнено");
     }
 
-    //Проверка на невалидный период
+    @Step("Verify invalid period")
     public void verifyInvalidPeriod() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
         fillInputField(period, "00.0000");
-        loseFocusWithWait();
-        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
+        loseFocus();
+        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
         fillInputField(period, "13.1998");
-        loseFocusWithWait();
-        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
+        loseFocus();
+        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
         fillInputField(period, RandomStringUtils.randomAlphabetic(10));
-        loseFocusWithWait();
-        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле обязательное");
+        loseFocus();
+        Assert.assertEquals(getText(errorMessageForPeriod), "Поле обязательное");
         fillInputField(period, "11.0000");
-        loseFocusWithWait();
+        loseFocus();
         fillInputField(period, "12.199");
-        loseFocusWithWait();
-        Assert.assertEquals(getText(errorMessageForPayerCode), "Поле заполнено некорректно");
+        loseFocus();
+        Assert.assertEquals(getText(errorMessageForPeriod), "Поле заполнено некорректно");
 
     }
 
-    //Проверка на невалидную сумму
+    @Step("Verify invalid sum")
     public void verifyInvalidSum() {
         navigateTo(COMMUNAL_PAYMENTS_MOSCOW);
         waitForElementAndClick(payCommunalInMoscow);
-        fillInputField(sumOfPayment, "0");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "0");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        fillInputField(sumOfPayment, "-5");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "-5");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Поле заполнено неверно");
-        fillInputField(sumOfPayment, "9");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "9");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        fillInputField(sumOfPayment, "9.99");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "9.99");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Минимум — 10 \u20BD");
-        fillInputField(sumOfPayment, "14999");
-        loseFocusWithWait();
-      //  Assert.assertTrue(!elementIsDisplayed(errorMessageForSumOfPayment));
-        fillInputField(sumOfPayment, "15000.01");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "14999");
+        loseFocus();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "15000.01");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        fillInputField(sumOfPayment, "15001");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "15001");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        fillInputField(sumOfPayment, "100000");
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, "100000");
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Максимум — 15 000 \u20BD");
-        fillInputField(sumOfPayment, RandomStringUtils.randomAlphabetic(20));
-        loseFocusWithWait();
+        waitForElementAndClick(sumOfPayment);
+        fillInputField(sumOfPaymentInput, RandomStringUtils.randomAlphabetic(20));
+        loseFocus();
         Assert.assertEquals(getText(errorMessageForSumOfPayment), "Поле обязательное");
     }
-
 
 }

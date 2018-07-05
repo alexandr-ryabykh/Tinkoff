@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -12,16 +13,17 @@ public class Payments extends BasePage {
 
     private MoscowCommunalServices communalServices = new MoscowCommunalServices();
     By communalPayments = By.xpath("(//a[contains(@href, 'kommunalnie-platezhi/')])[2]");
-    private By quickSearch = By.className("Input__valueContent_primary_3sxF0");
-    private By suggestedCommunalOrganization = By.cssSelector(".SearchSuggest__entry_highlighted_1SPg3 > div:nth-child(1) > div:nth-child(1)");
+    private By quickSearch = By.xpath("//*[@data-qa-file='FormFieldSearchAndPay']//input");
+    private By suggestedCommunalOrganization = By.xpath("//*[@data-qa-file='SuggestEntry' and descendant::*[@data-qa-file='Text']]/div/div");
 
+    @Step("Check if communal payments is present and open it")
     public void openCommunalPayments() {
         navigateTo(PAYMENTS_LINK);
         Assert.assertTrue(elementIsDisplayed(communalPayments));
         waitForElementAndClick(communalPayments);
     }
 
-
+    @Step("Search for Moscow Communal Service using QuickSearch")
     public void searchForServiceUsingQuickSearch() {
         fillInputField(quickSearch, "ЖКУ-Москва");
         List<WebElement> elements = selectFromList(suggestedCommunalOrganization);
@@ -29,9 +31,10 @@ public class Payments extends BasePage {
         elements.get(0).click();
     }
 
+    @Step("Verify the page is Moscow Communal ServiceA after searching")
     public void verifyThePageIsMoscowCommunalServiceAfterSearching() {
         searchForServiceUsingQuickSearch();
         waitForElementAndClick(communalServices.payCommunalInMoscow);
-        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/oplata/?tab=pay");
+        Assert.assertEquals(getCurrentUrl(), "https://www.tinkoff.ru/zhku-moskva/");
     }
 }
