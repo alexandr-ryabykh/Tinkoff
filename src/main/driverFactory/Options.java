@@ -1,10 +1,11 @@
 package driverFactory;
 
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 abstract class Options {
 
-    static ChromeOptions chromeOptions(){
+    ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
 
         options.addArguments(
@@ -13,6 +14,13 @@ abstract class Options {
                 "--disable-notifications",
                 "test-type"
         );
+        return options;
+    }
+
+    FirefoxOptions firefoxOptions() {
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("start-maximized");
+        options.addArguments("--disable-infobars");
         return options;
     }
 }
