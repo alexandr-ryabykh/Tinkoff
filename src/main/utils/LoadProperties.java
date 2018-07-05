@@ -6,6 +6,7 @@ import java.util.Properties;
 
 public class LoadProperties {
 
+    public static String DRIVER_NAME;
     public static String DRIVER_NAME_CHROME;
     public static String WINDOWS_PATH;
     public static String LINUX_PATH;
@@ -18,8 +19,9 @@ public class LoadProperties {
         try {
             Properties prop = new Properties();
             prop.load(new FileInputStream(System.getProperty("user.dir")
-                    + "\\src\\main\\resources\\application.properties"));
+                    + "\\src\\resources\\application.properties"));
             DRIVER_NAME_CHROME = prop.getProperty("DRIVER_NAME_CHROME");
+            DRIVER_NAME = prop.getProperty("DRIVER_NAME");
             LINUX_PATH = prop.getProperty("CHROME_DRIVER_PATH_LINUX");
             WINDOWS_PATH = prop.getProperty("CHROME_DRIVER_PATH_WINDOWS");
             PAYMENTS_LINK = prop.getProperty("PAYMENTS_LINK");
