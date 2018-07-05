@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Site Tests">
+    <test name="All tests" parallel="methods">
+        <classes>
+            <class name="Tests"/>
+        </classes>
+    </test>
+</suite>

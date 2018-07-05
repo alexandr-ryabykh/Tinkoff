@@ -1,29 +1,27 @@
 import driverFactory.DriverFactory;
 import io.qameta.allure.Description;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-import pages.*;
+import pages.CommunalServicePayment;
+import pages.HomePage;
+import pages.MoscowCommunalServices;
+import pages.Payments;
 
-public class Tests extends BasePage {
-    private HomePage homePage = new HomePage();
-    private CommunalServicePayment communalServicePayment = new CommunalServicePayment();
-    private Payments payments = new Payments();
-    private MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
-
+public class Tests {
 
     /*1*/
     @Test
     @Description("Open home page")
     public void openHomePageTest() {
+        HomePage homePage = new HomePage();
         homePage.openHomePage();
-        Assert.assertTrue(elementIsDisplayed(homePage.payments));
     }
 
     /*2*/
     @Test
     @Description("Open payments page")
     public void openPaymentsPageTest() {
+        HomePage homePage = new HomePage();
         homePage.openHomePage();
         homePage.openPaymentsLink();
     }
@@ -32,7 +30,9 @@ public class Tests extends BasePage {
     @Test
     @Description("Check if communal payments is present and open it")
     public void verifyAndGoToCommunalPaymentsTest() {
+        HomePage homePage = new HomePage();
         homePage.openHomePage();
+        Payments payments = new Payments();
         payments.openCommunalPayments();
     }
 
@@ -40,6 +40,7 @@ public class Tests extends BasePage {
     @Test
     @Description("Check is the current city is Moscow")
     public void verifyCurrentCityIsMoscowTest() {
+        CommunalServicePayment communalServicePayment = new CommunalServicePayment();
         communalServicePayment.verifyTheCityIsMoscow();
     }
 
@@ -47,6 +48,7 @@ public class Tests extends BasePage {
     @Test
     @Description("Open Moscow communal services")
     public void goToMoscowCommunalServiceTest() {
+        CommunalServicePayment communalServicePayment = new CommunalServicePayment();
         communalServicePayment.goToMoscowCommunalService();
     }
 
@@ -54,6 +56,7 @@ public class Tests extends BasePage {
     @Test
     @Description("Select payment of communal services in Moscow")
     public void selectPaymentInMoscowTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.selectPayCommunalInMoscow();
     }
 
@@ -61,36 +64,42 @@ public class Tests extends BasePage {
     @Test
     @Description("Verify obligatorily payer code input")
     public void verifyObligatorilyPayerCodeInputTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyObligatorilyPayerCodeInput();
     }
 
     @Test
     @Description("Verify obligatorily period input")
     public void verifyObligatorilyPeriodInputTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyObligatorilyPeriodInput();
     }
 
     @Test
     @Description("Verify obligatorily sum input")
     public void verifyObligatorilySumInputTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyObligatorilySumInput();
     }
 
     @Test
     @Description("Verify invalid payer code")
     public void verifyInvalidPayerCodeTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyInvalidPayerCode();
     }
 
     @Test
     @Description("Verify invalid period")
     public void verifyInvalidPeriodTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyInvalidPeriod();
     }
 
     @Test
     @Description("Verify invalid sum")
     public void verifyInvalidSumTest() {
+        MoscowCommunalServices moscowCommunalServices = new MoscowCommunalServices();
         moscowCommunalServices.verifyInvalidSum();
     }
 
@@ -98,6 +107,8 @@ public class Tests extends BasePage {
     @Test
     @Description("Search for Moscow Communal Service using QuickSearch")
     public void searchingOfMoscowServiceUsingQuickSearchTest() {
+        HomePage homePage = new HomePage();
+        Payments payments = new Payments();
         homePage.openHomePage();
         homePage.openPaymentsLink();
         payments.searchForServiceUsingQuickSearch();
@@ -105,8 +116,10 @@ public class Tests extends BasePage {
 
     /*11*/
     @Test
-    @Description("Verify the page is Moscow Communal ServiceA after searching")
+    @Description("Verify the page is Moscow Communal Service After searching")
     public void verifyThePageIsMoscowCommunalServiceTest() {
+        HomePage homePage = new HomePage();
+        Payments payments = new Payments();
         homePage.openHomePage();
         homePage.openPaymentsLink();
         payments.verifyThePageIsMoscowCommunalServiceAfterSearching();
@@ -116,12 +129,13 @@ public class Tests extends BasePage {
     @Test
     @Description("Change city to another and check absence of Moscow Service")
     public void changeRegionToAnotherTest() {
+        CommunalServicePayment communalServicePayment = new CommunalServicePayment();
         communalServicePayment.changeCityToAnotherAndCheckAbsenceOfMoscowService();
     }
 
 
     @AfterMethod
     public void stopTest() {
-        DriverFactory.getInstance().quitDriver();
+        DriverFactory.getInstance().destroy();
     }
 }
